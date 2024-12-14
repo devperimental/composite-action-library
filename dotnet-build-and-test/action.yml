@@ -47,7 +47,7 @@ runs:
       shell: bash
 
     - name: Run unit tests
-      run: dotnet test ${{inputs.src-dir}} --filter FullyQualifiedName~Tests --configuration Release --verbosity quiet --collect:"XPlat Code Coverage" --results-directory ./coverage /p:CollectCoverage=true
+      run: dotnet test ${{inputs.src-dir}} --filter FullyQualifiedName~Tests&FullyQualifiedName!~IntegrationTests --configuration Release --verbosity quiet --collect:"XPlat Code Coverage" --results-directory ./coverage /p:CollectCoverage=true
       shell: bash
 
     - name: Merge Coverage Reports
