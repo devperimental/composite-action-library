@@ -49,15 +49,19 @@ runs:
     - name: Add Github pacakges nuget source
       run: |
         dotnet nuget add source --username ${{ inputs.nuget-username}} --password ${{ inputs.team-pat }} --store-password-in-clear-text --name github 'https://nuget.pkg.github.com/${{inputs.repo-organisation}}/index.json'
-
+      shell: bash
+      
     - name: Install dependancies
       run: dotnet restore ${{inputs.src-dir}}
+      shell: bash
 
     - name: Build solution
       run: dotnet build ${{inputs.src-dir}} --configuration Release --no-restore
+      shell: bash
 
     - name: dotnet publish
       run: dotnet publish ${{ inputs.web_project_path }} -c Release -o ${{ inputs.publish_path }}
+      shell: bash
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
@@ -82,7 +86,9 @@ runs:
     - name: install browsers
       if: ${{ inputs.run_integration_tests == 'true' }}
       run: pwsh ${{ inputs.src-dir}}/${{inputs.test_project_name}}/bin/Release/net8.0/playwright.ps1 install
+      shell: bash
 
     - name: Run integration tests
       if: ${{ inputs.run_integration_tests == 'true' }}
       run: dotnet test ${{ inputs.src-dir}} --filter 'FullyQualifiedName~IntegrationTests' --configuration Release --environment SITE_URL=${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      shell: bash
