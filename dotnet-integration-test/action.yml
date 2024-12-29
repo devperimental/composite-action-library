@@ -1,5 +1,5 @@
-name: Build And Test
-description: Build And Test
+name: Run Integration Tests
+description: Run Integration Tests
 inputs:
   src-dir:
     description: source directory
