@@ -12,7 +12,6 @@ inputs:
     required: true
 runs:
   using: composite
-  runs-on: windows-latest
   steps:
     - name: check out
       uses: actions/checkout@v4
@@ -24,12 +23,17 @@ runs:
 
     - name: Install dependancies
       run: dotnet restore ${{ inputs.src-dir}}/${{inputs.integration_test_project}}/${{inputs.integration_test_project}}.csproj
+      shell: bash
 
     - name: Build solution
       run: dotnet build ${{ inputs.src-dir}}/${{inputs.integration_test_project}}/${{inputs.integration_test_project}}.csproj --configuration Release --no-restore
-    
+      shell: bash
+      
     - name: install browsers
       run: pwsh ${{ inputs.src-dir}}/${{inputs.integration_test_project}}/bin/Release/net8.0/playwright.ps1 install
+      shell: bash
       
     - name: Run integration tests
       run: dotnet test ${{ inputs.src-dir}}/${{inputs.integration_test_project}}/${{inputs.integration_test_project}}.csproj --filter 'FullyQualifiedName~IntegrationTests' --configuration Release --environment SITE_URL=${{ inputs.site_url }}
+      shell: bash
+      
