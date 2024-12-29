@@ -1,0 +1,37 @@
+name: Build And Test
+description: Build And Test
+inputs:
+  src-dir:
+    description: source directory
+    required: true
+  integration_test_project:
+    description: integration_test_project name
+    required: true
+  site_url:
+    description: site_url
+    required: true
+runs:
+  using: composite
+  steps:
+    runs-on: windows-latest
+    needs: dotnetBuild
+    steps:
+      - name: check out
+        uses: actions/checkout@v4
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Install dependancies
+        run: dotnet restore ${{inputs.src-dir}}
+
+      - name: Build solution
+        run: dotnet build ${{ inputs.src-dir}}/${{inputs.integration_test_project}}/${{inputs.integration_test_project}}.csproj --configuration Release --no-restore
+      
+      - name: install browsers
+        run: pwsh ${{ inputs.src-dir}}/${{inputs.integration_test_project}}/bin/Release/net8.0/playwright.ps1 install
+        
+      - name: Run integration tests
+        run: dotnet test ${{ inputs.src-dir}} --filter 'FullyQualifiedName~IntegrationTests' --configuration Release --environment SITE_URL=${{ inputs.site_url }}
