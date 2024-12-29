@@ -25,7 +25,7 @@ runs:
           dotnet-version: '8.x'
 
       - name: Install dependancies
-        run: dotnet restore ${{inputs.src-dir}}
+        run: dotnet restore ${{ inputs.src-dir}}/${{inputs.integration_test_project}}/${{inputs.integration_test_project}}.csproj
 
       - name: Build solution
         run: dotnet build ${{ inputs.src-dir}}/${{inputs.integration_test_project}}/${{inputs.integration_test_project}}.csproj --configuration Release --no-restore
@@ -34,4 +34,4 @@ runs:
         run: pwsh ${{ inputs.src-dir}}/${{inputs.integration_test_project}}/bin/Release/net8.0/playwright.ps1 install
         
       - name: Run integration tests
-        run: dotnet test ${{ inputs.src-dir}} --filter 'FullyQualifiedName~IntegrationTests' --configuration Release --environment SITE_URL=${{ inputs.site_url }}
+        run: dotnet test ${{ inputs.src-dir}}/${{inputs.integration_test_project}}/${{inputs.integration_test_project}}.csproj --filter 'FullyQualifiedName~IntegrationTests' --configuration Release --environment SITE_URL=${{ inputs.site_url }}
