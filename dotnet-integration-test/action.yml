@@ -10,6 +10,9 @@ inputs:
   site_url:
     description: site_url
     required: true
+  api_key:
+    description: api_key
+    required: false
 runs:
   using: composite
   steps:
@@ -34,6 +37,6 @@ runs:
       shell: bash
       
     - name: Run integration tests
-      run: dotnet test ${{ inputs.src-dir}}/${{inputs.integration_test_project}}/${{inputs.integration_test_project}}.csproj --filter 'FullyQualifiedName~IntegrationTests' --configuration Release --environment SITE_URL=${{ inputs.site_url }}
+      run: dotnet test ${{ inputs.src-dir}}/${{inputs.integration_test_project}}/${{inputs.integration_test_project}}.csproj --filter 'FullyQualifiedName~IntegrationTests' --configuration Release --environment SITE_URL=${{ inputs.site_url }} --environment API_KEY=${{ inputs.api_key }}
       shell: bash
       
